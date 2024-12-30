@@ -1,5 +1,6 @@
-#include <ostream>
+#include <iostream>
 #include "List.h"
+#include <stdexcept>
 
 template <typename T> 
 class ListArray : public List<T> {
@@ -46,28 +47,28 @@ friend std::ostream& operator<<(std::ostream &out, const ListArray<T> &list){
 void resize(int new_size){
 
 if(new_size > max){
-T* nuevo = new T(new_size);
+T* aux = new T(new_size);
 
 for(int i=0 ;i<max ;i++){
-	nuevo[i]=arr[i];
+	aux [i]=arr[i];
 }
 delete[] arr;
-arr = nuevo;
+arr = aux;
 max = new_size;
 
 	}
 
 if((n+6) <= max){
-T* nuevo = new T(new_size);
+T* aux = new T(new_size);
 max = new_size - 4;
 delete[] arr;
-arr=nuevo;
+arr=aux;
 }
 
 }
 
 void insert(int pos, T e)override{
-if ( n = max-1){
+if ( n == ( max-1)){
 	resize(max+5);
 }
 
@@ -79,48 +80,40 @@ if((n+6) <= max){
 	resize(max);
 	}
 
-}
-
-
-
-
-void append(T e)override{
-if(n==0){
-	arr[0]=e;
-	n+=1;
-	}
-	
-if((n+1) == max){
-	resize(max+5);
-	}	
-
-if((n+6) <= max){
-        resize(max);
+for (int i = n; i > pos; i--) {
+       arr[i] = arr[i - 1];
         }
-
-int valor = arr[0];
-n+=1;
-
-for(int i=1;i<=n;i++){
-	arr[i]=arr[i-1];
-	}
-arr[0]=valor;
-
+	arr[pos] = e;
+	n++;
 }
+
+
+
 
 void prepend (T e)override{
-if (arr[max-1]==0){
-	n+=1;
-	arr[n+1] = e;
+if(n==0){
+	arr[n]=e;
+	n++;
 	}
-else{
+if (n == max ){
 	resize(max+5);
-	n+=1;
-	arr[n+1] = e;
 	}
-if((n+6) <= max){
-        resize(max);
-        }
+
+for(int i=n;i<=n;i--){
+	arr[i]=arr[i-1];
+	}
+
+arr[0]= e;
+n++;
+
+}
+
+void append (T e)override{
+    if (n+1 == max-1){
+    resize(max+5);
+    }
+    ++n;
+    arr[n]=e;
 }
 
 T remove(int pos)override{
